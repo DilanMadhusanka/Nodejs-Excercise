@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 
 const app = express()
 
@@ -10,6 +11,10 @@ app.get('/', (request, response) => {
 
 app.get('/about', (request, response) => {
     response.send("Express")
+})
+
+app.get('/home', (request, response) => {
+    response.sendFile(path.resolve(__dirname, 'index.html'))
 })
 
 app.listen(3000, () => {
