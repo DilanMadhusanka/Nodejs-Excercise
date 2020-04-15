@@ -64,7 +64,7 @@ exports.update = (req, res) => {
     Note.findByIdAndUpdate(req.params.noteId, {
         title: req.body.title || "Untitled Note",
         content: req.body.content
-    }, {new: true}).then(note => {
+    }, { new: true }).then(note => {
         if (!note) {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
@@ -85,4 +85,21 @@ exports.update = (req, res) => {
 
 exports.delete = (req, res) => {
 
+    Note.findByIdAndRemove(req.params.noteId).then(note => {
+        if (!note) {
+            return res.status(404).send({
+                message: "Note not found with id " + req.params.noteId
+            })
+        }
+        res.send({ message: "Note deleted Successfully!" })
+    }).catch(err => {
+        if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+            return res.status(404).send({
+                message: "Note not found with id " + req.params.noteId
+            })
+        }
+        return res.status(500).send({
+            message: "Could not delete note with id " + req.params.noteId
+        })
+    })
 }
